@@ -1,0 +1,33 @@
+version: '3.7'
+
+networks:
+  volumenet:
+    external: true
+    name: localdev
+
+volumes:
+  datavol:
+
+services:
+  web:
+    build:
+      context: ./web
+      args:
+        compute_engine: default
+    container_name: test-web
+    networks:
+      - volumenet
+    restart: on-failure
+    environment:
+      VIRTUAL_HOST: test.docker
+    volumes:
+      - datavol:/var/www/html/bundles
+  app:
+    build:
+      context: ./app
+    container_name: test-app
+    networks:
+      - volumenet
+    restart: on-failure
+    volumes:
+      - datavol:/var/www/html/bundles
